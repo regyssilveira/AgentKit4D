@@ -1,0 +1,73 @@
+# =====================================================================
+# METADADOS DO PROJETO
+# =====================================================================
+sonar.projectKey=MeuProjetoDelphi
+sonar.projectName=Meu Projeto Delphi
+sonar.projectVersion=1.0.0
+
+# =====================================================================
+# DIRETÓRIOS E FONTES
+# =====================================================================
+sonar.sources=src
+# Caso possua pasta de testes, descomente a linha abaixo:
+# sonar.tests=tests
+
+# Codificação padrão dos arquivos fonte
+sonar.sourceEncoding=UTF-8
+
+# Padrões de exclusão comuns no Delphi
+sonar.exclusions=**/modules/**,**/bin/**,**/*.log,**/*.bat,**/__history/**,**/__recovery/**,**/*.dof,**/*.cfg
+
+# =====================================================================
+# EXCLUSÕES DE DUPLICAÇÃO DE CÓDIGO (CPD)
+# =====================================================================
+# Ignora arquivos de telas (GUI) e stubs de testes/wizards da detecção de duplicados
+sonar.cpd.exclusions=src/GUI/**/*.pas,src/IDE/**/*.pas,tests/**/*.pas
+
+# =====================================================================
+# COBERTURA E TESTES
+# =====================================================================
+# Descomente e configure os relatórios de testes se aplicável:
+# sonar.delphi.nunit.reportPaths=tests
+# sonar.coverageReportPaths=tests/CodeCoverage_Summary.xml
+
+# =====================================================================
+# SUPRESSÃO DE FALSOS POSITIVOS (MULTICRITÉRIO)
+# =====================================================================
+sonar.issue.ignore.multicriteria=e1,e2,e3,e4,e5,e6,e7,e8,e9
+
+# e1: Ignorar UnusedProperty em arquivos de domínio (RTTI/JSON serialization)
+sonar.issue.ignore.multicriteria.e1.ruleKey=community-delphi:UnusedProperty
+sonar.issue.ignore.multicriteria.e1.resourceKey=src/Core/Domain/**/*.pas
+
+# e2: Ignorar UnusedType nas interfaces de portas/contratos (SOLID interfaces)
+sonar.issue.ignore.multicriteria.e2.ruleKey=community-delphi:UnusedType
+sonar.issue.ignore.multicriteria.e2.resourceKey=src/Core/Ports/**/*.pas
+
+# e3: Ignorar UnusedRoutine para closure threads falsos positivos no instalador e classes de serviço
+sonar.issue.ignore.multicriteria.e3.ruleKey=community-delphi:UnusedRoutine
+sonar.issue.ignore.multicriteria.e3.resourceKey=src/**/*.pas
+
+# e4: Ignorar UnusedImport falsos positivos em todo o projeto
+sonar.issue.ignore.multicriteria.e4.ruleKey=community-delphi:UnusedImport
+sonar.issue.ignore.multicriteria.e4.resourceKey=**/*
+
+# e5: Ignorar ImportSpecificity (falsos positivos em interfaces que precisam de imports)
+sonar.issue.ignore.multicriteria.e5.ruleKey=community-delphi:ImportSpecificity
+sonar.issue.ignore.multicriteria.e5.resourceKey=**/*
+
+# e6: Ignorar TooLongLine (estilo de tamanho de linha)
+sonar.issue.ignore.multicriteria.e6.ruleKey=community-delphi:TooLongLine
+sonar.issue.ignore.multicriteria.e6.resourceKey=**/*
+
+# e7: Ignorar UnusedLocalVariable falsos positivos (como variáveis declaradas inline)
+sonar.issue.ignore.multicriteria.e7.ruleKey=community-delphi:UnusedLocalVariable
+sonar.issue.ignore.multicriteria.e7.resourceKey=**/*
+
+# e8: Ignorar CognitiveComplexityRoutine (complexidade cognitiva de rotinas legadas/grandes)
+sonar.issue.ignore.multicriteria.e8.ruleKey=community-delphi:CognitiveComplexityRoutine
+sonar.issue.ignore.multicriteria.e8.resourceKey=**/*
+
+# e9: Ignorar CyclomaticComplexityRoutine (complexidade ciclomática de rotinas legadas/grandes)
+sonar.issue.ignore.multicriteria.e9.ruleKey=community-delphi:CyclomaticComplexityRoutine
+sonar.issue.ignore.multicriteria.e9.resourceKey=**/*

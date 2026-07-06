@@ -1,0 +1,45 @@
+@echo off
+setlocal
+echo ========================================================
+echo EXECUTANDO ANALISE DO SONARQUBE
+echo ========================================================
+
+set "TOKEN="
+set "TOKEN_FILE=sonar_token.txt"
+
+:: 1. Tenta carregar da variável de ambiente
+if not "%SONAR_TOKEN%"=="" (
+    set "TOKEN=%SONAR_TOKEN%"
+    echo Carregado token da variavel de ambiente SONAR_TOKEN.
+)
+
+:: 2. Tenta carregar do arquivo de configuração local
+if "%TOKEN%"=="" (
+    if exist "%TOKEN_FILE%" (
+        set /p TOKEN=<%TOKEN_FILE%
+        echo Carregado token do arquivo local %TOKEN_FILE%.
+    )
+)
+
+:: 3. Caso não encontre, solicita interativamente e oferece salvar
+if "%TOKEN%"=="" (
+    set /p TOKEN="Digite o seu SonarQube Token: "
+    
+    :: Pergunta se deseja salvar localmente para reuso futuro
+    choice /M "Deseja salvar este token em %TOKEN_FILE% para reuso futuro (adicione ao .gitignore)"
+    if not errorlevel 2 (
+        echo %TOKEN%> %TOKEN_FILE%
+        echo Token salvo em %TOKEN_FILE%.
+    )
+)
+
+echo Executando a analise estatica...
+sonar-scanner -Dsonar.token=%TOKEN%
+
+if %ERRORLEVEL% NEQ 0 (
+    echo [ERRO] Falha ao executar o Sonar Scanner.
+    exit /b %ERRORLEVEL%
+)
+
+echo Analise concluida com sucesso!
+endlocal
