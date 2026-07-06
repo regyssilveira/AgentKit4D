@@ -95,3 +95,25 @@ Para garantir que as IAs sigam o mesmo padrão de código do repositório:
 *   **Gerenciamento Inteligente de Falsos Positivos**: Silencia alertas desnecessários de estilo e formatação ao focar no que realmente importa para a segurança do software.
 *   **Gestão Anti-Vazamento**: Padronização de destruidores (`override`), construtores (`inherited`) e uso de `try..finally` e `FreeAndNil` de forma limpa.
 *   **Compilação Win32 e Win64**: Dicas e contornos práticos para evitar falhas clássicas de compiladores, como inferências incorretas do DUnitX em 64 bits e encerramento indesejado de scripts `.bat` sequenciais.
+
+---
+
+## 🤖 Engenharia de Prompt e Interação com IAs
+
+Para tirar o máximo proveito do arquivo `AGENTS.md` ao trabalhar com coding assistants modernos (como Antigravity, Cursor, GitHub Copilot ou Claude), você pode estruturar seus prompts para que eles leiam e apliquem as diretrizes ativamente.
+
+### Como referenciar nas ferramentas de IA
+*   **Cursor / VS Code (AI Chat)**: Digite `@AGENTS.md` (ou adicione o arquivo como contexto) e faça o seu pedido.
+*   **GitHub Copilot / Chat**: Utilize `#file:AGENTS.md` na caixa de diálogo.
+*   **Custom Instructions / System Prompts**: Você pode copiar o conteúdo do arquivo para as configurações permanentes de prompt de sistema da sua IA de uso diário.
+
+### Exemplos Práticos de Prompts
+
+#### 1. Escrevendo nova lógica (com foco em TDD e Clean Code)
+> "Leia o arquivo `.agents/AGENTS.md`. Preciso implementar uma classe de serviço em Delphi para integração com o gateway de pagamento. Crie a interface e os testes unitários do DUnitX primeiro (TDD), e siga as regras de nomenclatura e liberação de memória em blocos try..finally."
+
+#### 2. Refatorando código legado (Humble Object)
+> "Consulte as diretrizes de código legado na Seção 6 do `.agents/AGENTS.md`. Analise a unit do Form legado que anexei e ajude-me a extrair toda a lógica de negócio e queries de banco do evento Click do botão para uma classe de serviço pura, aplicando o padrão Humble Object."
+
+#### 3. Planejamento de novas rotinas (Contract-First)
+> "Aplique as diretrizes da Seção 7 (Contract-First) do `.agents/AGENTS.md`. Vamos planejar uma nova funcionalidade de importação de arquivos XML. Proponha primeiro as interfaces de abstração e as validações prematuras (Fail-Fast) antes de iniciarmos qualquer código de execução."
