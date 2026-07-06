@@ -100,6 +100,9 @@ Para garantir que as IAs sigam o mesmo padrão de código do repositório:
 
 ## 🤖 Engenharia de Prompt e Interação com IAs
 
+> [!NOTE]
+> **Leitura Automática**: Coding assistants modernos integrados ao ambiente/IDE (como o Antigravity) detectam e consomem as regras do arquivo `.agents/AGENTS.md` de forma **100% automática** a partir do contexto do projeto. As instruções manuais e prompts a seguir são recomendados apenas para guiar o foco da IA em tarefas específicas ou ao interagir com interfaces de chat externas baseadas na web (sem indexação física do repositório).
+
 Para tirar o máximo proveito do arquivo `AGENTS.md` ao trabalhar com coding assistants modernos (como Antigravity, Cursor, GitHub Copilot ou Claude), você pode estruturar seus prompts para que eles leiam e apliquem as diretrizes ativamente.
 
 ### Como referenciar nas ferramentas de IA
