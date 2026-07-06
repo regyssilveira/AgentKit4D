@@ -28,6 +28,30 @@ O **Delphi Agent Quality Kit** mitiga esses problemas oferecendo modelos pré-co
 
 ---
 
+## 🔌 Habilitando Suporte a Delphi no SonarQube (Pré-requisitos)
+
+Antes de rodar as análises em seus projetos, o seu servidor SonarQube precisa saber interpretar o código Delphi (`.pas`). Caso ainda não possua o plugin instalado, siga uma das opções abaixo:
+
+### Opção 1: Instalação via SonarQube Marketplace (Recomendado)
+1. Acesse o painel do seu SonarQube como administrador.
+2. Navegue até: **Administration > Marketplace**.
+3. Procure por: **Delphi** (como o plugin comunitário *Sonar-Delphi* ou *DelphiSonar*).
+4. Clique em **Install** e reinicie o servidor SonarQube conforme solicitado.
+
+### Opção 2: Instalação Manual (Servidores Offline)
+Se o seu servidor SonarQube não possuir acesso à internet:
+1. Baixe o arquivo `.jar` estável do plugin de Delphi compatível com sua versão do SonarQube a partir de repositórios oficiais da comunidade (ex: [Sonar-Delphi](https://github.com/checkstyle/sonar-delphi)).
+2. Copie o arquivo `.jar` para o diretório de plugins do seu servidor:
+   ```bash
+   /caminho/do/seu/sonarqube/extensions/plugins/
+   ```
+3. Reinicie o servidor do SonarQube.
+
+> [!TIP]
+> **DelphiLint e Relatórios Externos**: Caso utilize analisadores adicionais locais (como o *DelphiLint*), você pode configurá-los para exportar um relatório de issues e passá-lo para a análise do SonarQube adicionando a propriedade `sonar.externalIssuesReportPaths` no seu arquivo `sonar-project.properties`.
+
+---
+
 ## 🛠️ Como Utilizar em um Novo Projeto
 
 Siga os passos abaixo para implantar a qualidade de código em seu novo projeto Delphi:
