@@ -55,7 +55,10 @@ Para garantir que as IAs sigam o mesmo padrão de código do repositório:
 2. Copie o arquivo [generate_coverage.ps1.template](file:///d:/Projetos/AgentKit4D/generate_coverage.ps1.template) para dentro dela e renomeie-o para **`generate_coverage.ps1`**.
 3. Execute o script via PowerShell para mapear as linhas executáveis do seu projeto e gerar o relatório XML estruturado.
 4. Copie o arquivo [run_sonar.bat.template](file:///d:/Projetos/AgentKit4D/run_sonar.bat.template) para a **raiz** do seu projeto e renomeie-o para **`run_sonar.bat`**.
-5. Execute o script `run_sonar.bat`. Na primeira execução, ele solicitará o token do SonarQube e oferecerá salvá-lo no arquivo de configuração local **`sonar_token.txt`** para evitar digitações futuras.
+5. Execute o script `run_sonar.bat`. O script gerencia o token de acesso automaticamente através do seguinte fluxo de prioridade:
+   * **Variável de Ambiente**: Se a variável `%SONAR_TOKEN%` estiver definida no terminal ou no Windows, ela será usada de imediato.
+   * **Arquivo Local**: Se a variável de ambiente estiver ausente, ele tentará ler do arquivo local `sonar_token.txt` criado na raiz.
+   * **Entrada Manual (Interativa)**: Se nenhuma das opções anteriores estiver configurada, ele solicitará o token no console e oferecerá a opção de gravá-lo no arquivo local `sonar_token.txt` para automatizar execuções futuras.
 
 > [!IMPORTANT]
 > **Adicione o arquivo `sonar_token.txt` ao seu `.gitignore`!**
