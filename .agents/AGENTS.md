@@ -38,3 +38,7 @@ Ao interagir com este repositório, ative e respeite as seguintes regras de dese
 
 11. **[APIs REST com Horse](file:///./skills/delphi-rest-apis-horse/SKILL.md)**
     * Padrões de controllers e rotas REST, uso de middlewares essenciais (`Jhonson`, `CORS`, `HandleException`) e organização MVC.
+
+12. **[Dext Framework](file:///./skills/delphi-dext-framework/SKILL.md)**
+    * Diretrizes de APIs web, ORM, injeção de dependências e testes unitários utilizando o framework Dext.
+

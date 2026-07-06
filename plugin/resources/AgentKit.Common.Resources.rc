@@ -13,3 +13,4 @@ SKILL_THREADING RCDATA "..\\..\\.agents\\skills\\delphi-multithreading-async\\SK
 SKILL_FIREDAC RCDATA "..\\..\\.agents\\skills\\delphi-firedac-optimization\\SKILL.md"
 SKILL_ACBR RCDATA "..\\..\\.agents\\skills\\delphi-acbr-integration\\SKILL.md"
 SKILL_HORSE RCDATA "..\\..\\.agents\\skills\\delphi-rest-apis-horse\\SKILL.md"
+SKILL_DEXT RCDATA "..\\..\\.agents\\skills\\delphi-dext-framework\\SKILL.md"

@@ -170,7 +170,7 @@ var
   LLocalWarnings: string;
   LAgentsFile: string;
   LSkillsDir: string;
-  LSkills: array[0..10] of TSkillDefinition;
+  LSkills: array[0..11] of TSkillDefinition;
   LSkill: TSkillDefinition;
   LTargetDir: string;
   LSkillContent: string;
@@ -270,6 +270,10 @@ begin
       LSkills[10].SkillName := 'delphi-rest-apis-horse';
       LSkills[10].ResourceName := 'SKILL_HORSE';
       LSkills[10].GitHubPath := '.agents/skills/delphi-rest-apis-horse/SKILL.md';
+
+      LSkills[11].SkillName := 'delphi-dext-framework';
+      LSkills[11].ResourceName := 'SKILL_DEXT';
+      LSkills[11].GitHubPath := '.agents/skills/delphi-dext-framework/SKILL.md';
 
       // Inicializar cada skill
       for LSkill in LSkills do
