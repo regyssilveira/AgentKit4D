@@ -150,3 +150,16 @@ Sempre utilize o gerenciador de dependências **Boss** (`boss install <pacote>`)
 | `horse-jwt` | Validação de Tokens JWT para autenticação | `boss install horse-jwt` |
 | `horse-basic-auth` | Validação de autenticação clássica (Basic Auth) | `boss install horse-basic-auth` |
 | `horse-octet-stream` | Middleware para upload/download seguro de arquivos binários | `boss install horse-octet-stream` |
+
+---
+
+## 5. Referência de Skills Originais (Diretrizes Avançadas)
+O framework Horse possui um conjunto completo de 6 skills de IA avançadas em inglês na pasta de documentação do seu próprio repositório `$(HORSE)\doc\skills\`. Caso precise implementar lógicas complexas de roteamento, provedores ou middlewares customizados, consulte as diretrizes originais correspondentes:
+
+*   **Estrutura de Aplicação**: `horse-app-structure.md`
+*   **Rotas e Agrupamentos**: `horse-routing.md`
+*   **Configuração de Middlewares**: `horse-middlewares.md`
+*   **Payloads (Request/Response)**: `horse-request-response.md`
+*   **Provedores de Servidor (Providers)**: `horse-providers.md`
+*   **Criação de Middlewares**: `horse-writing-middleware.md`
+

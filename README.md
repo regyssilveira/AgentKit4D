@@ -4,7 +4,11 @@ Uma solução completa contendo diretrizes, automações e modelos de configura�
 
 Este kit foi projetado para unificar os padrões de desenvolvimento entre desenvolvedores humanos e **agentes de IA (coding assistants)**, garantindo conformidade com Clean Code, SOLID, e gestão de memória.
 
+> [!NOTE]
+> **Manual de Ajuda para Humanos**: Se você busca guias de referência técnica detalhados e exemplos práticos de código Delphi ("Certo vs Errado") para cada diretriz do kit, acesse a nossa central de **[Manuais de Ajuda (Help de Skills)](file:///d:/Projetos/AgentKit4D/docs/README.md)**.
+
 ---
+
 
 ## 🎯 O que é este projeto?
 
