@@ -42,3 +42,10 @@ Ao interagir com este repositório, ative e respeite as seguintes regras de dese
 12. **[Dext Framework](file:///./skills/delphi-dext-framework/SKILL.md)**
     * Diretrizes de APIs web, ORM, injeção de dependências e testes unitários utilizando o framework Dext.
 
+13. **[Migração BDE para FireDAC](file:///./skills/delphi-migration-bde-to-firedac/SKILL.md)**
+    * Mapeamento de componentes obsoletos, transações, tipos de enumerados e automatização com a ferramenta reFind.exe.
+
+14. **[Migração dbExpress para FireDAC](file:///./skills/delphi-migration-dbx-to-firedac/SKILL.md)**
+    * Mapeamento de classes de conexão e datasets dbExpress, drivers de banco, e uso de transações de compatibilidade.
+
+

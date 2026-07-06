@@ -170,7 +170,7 @@ var
   LLocalWarnings: string;
   LAgentsFile: string;
   LSkillsDir: string;
-  LSkills: array[0..11] of TSkillDefinition;
+  LSkills: array[0..13] of TSkillDefinition;
   LSkill: TSkillDefinition;
   LTargetDir: string;
   LSkillContent: string;
@@ -274,6 +274,14 @@ begin
       LSkills[11].SkillName := 'delphi-dext-framework';
       LSkills[11].ResourceName := 'SKILL_DEXT';
       LSkills[11].GitHubPath := '.agents/skills/delphi-dext-framework/SKILL.md';
+
+      LSkills[12].SkillName := 'delphi-migration-bde-to-firedac';
+      LSkills[12].ResourceName := 'SKILL_MIGRATE_BDE';
+      LSkills[12].GitHubPath := '.agents/skills/delphi-migration-bde-to-firedac/SKILL.md';
+
+      LSkills[13].SkillName := 'delphi-migration-dbx-to-firedac';
+      LSkills[13].ResourceName := 'SKILL_MIGRATE_DBX';
+      LSkills[13].GitHubPath := '.agents/skills/delphi-migration-dbx-to-firedac/SKILL.md';
 
       // Inicializar cada skill
       for LSkill in LSkills do
