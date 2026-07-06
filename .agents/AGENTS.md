@@ -48,4 +48,8 @@ Ao interagir com este repositório, ative e respeite as seguintes regras de dese
 14. **[Migração dbExpress para FireDAC](file:///./skills/delphi-migration-dbx-to-firedac/SKILL.md)**
     * Mapeamento de classes de conexão e datasets dbExpress, drivers de banco, e uso de transações de compatibilidade.
 
+15. **[Web Stencils (Template Engine)](file:///./skills/delphi-webstencils-templates/SKILL.md)**
+    * Diretrizes de qualidade e desenvolvimento de templates HTML e páginas dinâmicas com Web Stencils (Server-Side Rendering) no Delphi.
+
+
 

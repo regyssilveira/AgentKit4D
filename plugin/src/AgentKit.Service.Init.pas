@@ -170,7 +170,7 @@ var
   LLocalWarnings: string;
   LAgentsFile: string;
   LSkillsDir: string;
-  LSkills: array[0..13] of TSkillDefinition;
+  LSkills: array[0..14] of TSkillDefinition;
   LSkill: TSkillDefinition;
   LTargetDir: string;
   LSkillContent: string;
@@ -282,6 +282,10 @@ begin
       LSkills[13].SkillName := 'delphi-migration-dbx-to-firedac';
       LSkills[13].ResourceName := 'SKILL_MIGRATE_DBX';
       LSkills[13].GitHubPath := '.agents/skills/delphi-migration-dbx-to-firedac/SKILL.md';
+
+      LSkills[14].SkillName := 'delphi-webstencils-templates';
+      LSkills[14].ResourceName := 'SKILL_WEBSTENCILS';
+      LSkills[14].GitHubPath := '.agents/skills/delphi-webstencils-templates/SKILL.md';
 
       // Inicializar cada skill
       for LSkill in LSkills do

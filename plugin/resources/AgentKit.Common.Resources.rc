@@ -16,4 +16,6 @@ SKILL_HORSE RCDATA "..\\..\\.agents\\skills\\delphi-rest-apis-horse\\SKILL.md"
 SKILL_DEXT RCDATA "..\\..\\.agents\\skills\\delphi-dext-framework\\SKILL.md"
 SKILL_MIGRATE_BDE RCDATA "..\\..\\.agents\\skills\\delphi-migration-bde-to-firedac\\SKILL.md"
 SKILL_MIGRATE_DBX RCDATA "..\\..\\.agents\\skills\\delphi-migration-dbx-to-firedac\\SKILL.md"
+SKILL_WEBSTENCILS RCDATA "..\\..\\.agents\\skills\\delphi-webstencils-templates\\SKILL.md"
+
 
