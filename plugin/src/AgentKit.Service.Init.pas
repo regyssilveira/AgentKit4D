@@ -208,7 +208,7 @@ begin
       
       LAgentsContent := '';
       LLocalWarnings := '';
-      if not LoadTemplateContent('AGENTS.md.template', 'AGENTS_TEMPLATE', LAgentsContent, LLocalWarnings) then
+      if not LoadTemplateContent('.agents/AGENTS.md', 'AGENTS_TEMPLATE', LAgentsContent, LLocalWarnings) then
         raise Exception.Create('Falha ao carregar o template AGENTS.md.');
         
       if not LLocalWarnings.IsEmpty then
@@ -229,47 +229,47 @@ begin
       // Definir as skills
       LSkills[0].SkillName := 'delphi-clean-code-solid';
       LSkills[0].ResourceName := 'SKILL_CC_SOLID';
-      LSkills[0].GitHubPath := 'templates/skills/delphi-clean-code-solid/SKILL.md';
+      LSkills[0].GitHubPath := '.agents/skills/delphi-clean-code-solid/SKILL.md';
 
       LSkills[1].SkillName := 'delphi-memory-management';
       LSkills[1].ResourceName := 'SKILL_MEMORY';
-      LSkills[1].GitHubPath := 'templates/skills/delphi-memory-management/SKILL.md';
+      LSkills[1].GitHubPath := '.agents/skills/delphi-memory-management/SKILL.md';
 
       LSkills[2].SkillName := 'delphi-tdd-and-quality';
       LSkills[2].ResourceName := 'SKILL_TDD_QUALITY';
-      LSkills[2].GitHubPath := 'templates/skills/delphi-tdd-and-quality/SKILL.md';
+      LSkills[2].GitHubPath := '.agents/skills/delphi-tdd-and-quality/SKILL.md';
 
       LSkills[3].SkillName := 'delphi-sonar-lint-compliance';
       LSkills[3].ResourceName := 'SKILL_SONAR_LINT';
-      LSkills[3].GitHubPath := 'templates/skills/delphi-sonar-lint-compliance/SKILL.md';
+      LSkills[3].GitHubPath := '.agents/skills/delphi-sonar-lint-compliance/SKILL.md';
 
       LSkills[4].SkillName := 'delphi-legacy-refactoring';
       LSkills[4].ResourceName := 'SKILL_LEGACY_REF';
-      LSkills[4].GitHubPath := 'templates/skills/delphi-legacy-refactoring/SKILL.md';
+      LSkills[4].GitHubPath := '.agents/skills/delphi-legacy-refactoring/SKILL.md';
 
       LSkills[5].SkillName := 'delphi-ai-contract-design';
       LSkills[5].ResourceName := 'SKILL_AI_CONTRACT';
-      LSkills[5].GitHubPath := 'templates/skills/delphi-ai-contract-design/SKILL.md';
+      LSkills[5].GitHubPath := '.agents/skills/delphi-ai-contract-design/SKILL.md';
 
       LSkills[6].SkillName := 'delphi-multitarget-compilation';
       LSkills[6].ResourceName := 'SKILL_COMPILATION';
-      LSkills[6].GitHubPath := 'templates/skills/delphi-multitarget-compilation/SKILL.md';
+      LSkills[6].GitHubPath := '.agents/skills/delphi-multitarget-compilation/SKILL.md';
 
       LSkills[7].SkillName := 'delphi-multithreading-async';
       LSkills[7].ResourceName := 'SKILL_THREADING';
-      LSkills[7].GitHubPath := 'templates/skills/delphi-multithreading-async/SKILL.md';
+      LSkills[7].GitHubPath := '.agents/skills/delphi-multithreading-async/SKILL.md';
 
       LSkills[8].SkillName := 'delphi-firedac-optimization';
       LSkills[8].ResourceName := 'SKILL_FIREDAC';
-      LSkills[8].GitHubPath := 'templates/skills/delphi-firedac-optimization/SKILL.md';
+      LSkills[8].GitHubPath := '.agents/skills/delphi-firedac-optimization/SKILL.md';
 
       LSkills[9].SkillName := 'delphi-acbr-integration';
       LSkills[9].ResourceName := 'SKILL_ACBR';
-      LSkills[9].GitHubPath := 'templates/skills/delphi-acbr-integration/SKILL.md';
+      LSkills[9].GitHubPath := '.agents/skills/delphi-acbr-integration/SKILL.md';
 
       LSkills[10].SkillName := 'delphi-rest-apis-horse';
       LSkills[10].ResourceName := 'SKILL_HORSE';
-      LSkills[10].GitHubPath := 'templates/skills/delphi-rest-apis-horse/SKILL.md';
+      LSkills[10].GitHubPath := '.agents/skills/delphi-rest-apis-horse/SKILL.md';
 
       // Inicializar cada skill
       for LSkill in LSkills do
@@ -346,7 +346,7 @@ begin
           FFileSystem.CreateDir(LScriptsDir);
           
         LCoverageContent := '';
-        if not LoadTemplateContent('generate_coverage.ps1.template', 'COVERAGE_PS_TEMPLATE', LCoverageContent, LLocalWarnings) then
+        if not LoadTemplateContent('scripts/generate_coverage.ps1', 'COVERAGE_PS_TEMPLATE', LCoverageContent, LLocalWarnings) then
           raise Exception.Create('Falha ao carregar o template generate_coverage.ps1.');
           
         if not LLocalWarnings.IsEmpty and (LWarningBuilder.ToString.IndexOf(LLocalWarnings) = -1) then

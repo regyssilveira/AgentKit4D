@@ -22,9 +22,9 @@ O **Delphi Agent Quality Kit** mitiga esses problemas oferecendo modelos pré-co
 | Componente | Descrição |
 | :--- | :--- |
 | **[sonar-project.properties.template](file:///d:/Projetos/AgentKit4D/sonar-project.properties.template)** | Modelo pronto contendo configurações otimizadas para o SonarQube, supressão de falsos positivos do parser Delphi (variáveis inline/imports) e regras de exclusão de duplicações (CPD) para stubs e telas visuais (`.dfm`). |
-| **[AGENTS.md.template](file:///d:/Projetos/AgentKit4D/AGENTS.md.template)** | Diretrizes arquiteturais de Clean Code, SOLID, TDD e boas práticas específicas de Delphi estruturadas para serem consumidas e seguidas por IAs de desenvolvimento. |
+| **[AGENTS.md](file:///d:/Projetos/AgentKit4D/.agents/AGENTS.md)** | Diretrizes arquiteturais de Clean Code, SOLID, TDD e boas práticas específicas de Delphi estruturadas para serem consumidas e seguidas por IAs de desenvolvimento. |
 | **[run_sonar.bat.template](file:///d:/Projetos/AgentKit4D/run_sonar.bat.template)** | Script em lote auxiliar que facilita a execução local da análise estática do SonarQube com gestão segura do token de acesso. |
-| **[generate_coverage.ps1.template](file:///d:/Projetos/AgentKit4D/generate_coverage.ps1.template)** | Script PowerShell para calcular, normalizar e gerar o relatório XML de *Generic Coverage* para o SonarQube a partir dos testes executados. |
+| **[generate_coverage.ps1](file:///d:/Projetos/AgentKit4D/scripts/generate_coverage.ps1)** | Script PowerShell para calcular, normalizar e gerar o relatório XML de *Generic Coverage* para o SonarQube a partir dos testes executados. |
 
 ---
 
@@ -78,39 +78,29 @@ O **AgentKitPlugin** é um pacote design-time que se instala diretamente na IDE 
 
 ## 🛠️ Como Utilizar em um Novo Projeto
 
-Siga os passos abaixo para implantar a qualidade de código em seu novo projeto Delphi:
+Escolha uma das trilhas abaixo para implantar o Delphi Agent Quality Kit em seu novo projeto:
 
-### Passo 1: Configurar a Análise Estática (SonarQube)
-1. Copie o arquivo [sonar-project.properties.template](file:///d:/Projetos/AgentKit4D/sonar-project.properties.template) para a **raiz** do seu novo projeto Delphi.
-2. Renomeie o arquivo para: **`sonar-project.properties`**.
-3. Abra o arquivo e configure os metadados iniciais do seu projeto:
-   ```properties
-   sonar.projectKey=MeuProjeto
-   sonar.projectName=Meu Projeto
-   sonar.projectVersion=1.0.0
-   ```
-4. Ajuste os diretórios de fontes (`sonar.sources`) e testes (`sonar.tests`) no arquivo de propriedades caso as pastas do seu projeto não sigam os diretórios padrão `src` e `tests`.
+### Trilha A: Inicialização Automática via Plugin (Recomendado)
+Se você instalou o **AgentKitPlugin** na IDE do Delphi:
+1. Abra o seu projeto no RAD Studio.
+2. Clique com o **botão direito** sobre o projeto ativo no **Project Manager** (ou no menu **Tools** superior) e escolha **"AgentKit: Initialize Quality Kit"**.
+3. Preencha os metadados do projeto na tela visual (Project Key, Name, Versão e URL do SonarQube).
+4. O plugin criará toda a estrutura de pastas (`.agents/`, `.agents/skills/` e `scripts/`), além dos arquivos de propriedades, scripts e a exclusão do token no `.gitignore` de forma 100% automatizada.
 
-### Passo 2: Configurar o Agent de IA (Antigravity e outros)
-Para garantir que as IAs sigam o mesmo padrão de código do repositório:
-1. Na **raiz** do seu novo projeto, crie um diretório chamado: **`.agents`**.
-2. Copie o arquivo [AGENTS.md.template](file:///d:/Projetos/AgentKit4D/AGENTS.md.template) para dentro dessa pasta.
-3. Renomeie o arquivo para: **`AGENTS.md`**.
-4. Qualquer assistente de IA que interagir com o seu repositório passará a ler e seguir de forma automática as diretrizes DelphiSonar documentadas nele.
+### Trilha B: Inicialização Manual (Sem Plugin / Cópia Direta)
+Se prefere não utilizar o plugin e configurar o projeto manualmente, o processo é extremamente simples por conta da estrutura viva do kit:
 
-### Passo 3: Executar a Análise Local com Cobertura
-1. Crie uma pasta chamada **`scripts`** (ou `scratch`) na raiz do seu projeto.
-2. Copie o arquivo [generate_coverage.ps1.template](file:///d:/Projetos/AgentKit4D/generate_coverage.ps1.template) para dentro dela e renomeie-o para **`generate_coverage.ps1`**.
-3. Execute o script via PowerShell para mapear as linhas executáveis do seu projeto e gerar o relatório XML estruturado.
-4. Copie o arquivo [run_sonar.bat.template](file:///d:/Projetos/AgentKit4D/run_sonar.bat.template) para a **raiz** do seu projeto e renomeie-o para **`run_sonar.bat`**.
-5. Execute o script `run_sonar.bat`. O script gerencia o token de acesso automaticamente através do seguinte fluxo de prioridade:
-   * **Variável de Ambiente**: Se a variável `%SONAR_TOKEN%` estiver definida no terminal ou no Windows, ela será usada de imediato.
-   * **Arquivo Local**: Se a variável de ambiente estiver ausente, ele tentará ler do arquivo local `sonar_token.txt` criado na raiz.
-   * **Entrada Manual (Interativa)**: Se nenhuma das opções anteriores estiver configurada, ele solicitará o token no console e oferecerá a opção de gravá-lo no arquivo local `sonar_token.txt` para automatizar execuções futuras.
+1. **Copiar Diretórios**:
+   * Copie a pasta **`[.agents/](file:///d:/Projetos/AgentKit4D/.agents)`** inteira da raiz do kit para a raiz do seu projeto. (Pronto! Suas regras globais e as 11 skills já estão instaladas no lugar correto).
+   * Copie a pasta **`[scripts/](file:///d:/Projetos/AgentKit4D/scripts)`** inteira da raiz do kit para a raiz do seu projeto (ela contém o script `generate_coverage.ps1`).
 
-> [!IMPORTANT]
-> **Adicione o arquivo `sonar_token.txt` ao seu `.gitignore`!**
-> É fundamental garantir que este arquivo com credenciais locais nunca seja comitado para repositórios públicos.
+2. **Copiar e Renomear Arquivos de Configuração**:
+   * Copie o arquivo **`[sonar-project.properties.template](file:///d:/Projetos/AgentKit4D/sonar-project.properties.template)`** para a raiz do seu projeto e renomeie-o para **`sonar-project.properties`** (ajustando os metadados como Key e Name do seu projeto).
+   * Copie o arquivo **`[run_sonar.bat.template](file:///d:/Projetos/AgentKit4D/run_sonar.bat.template)`** para a raiz do seu projeto e renomeie-o para **`run_sonar.bat`**.
+
+3. **Definir o Token e GitIgnore**:
+   * Caso queira usar o script `run_sonar.bat` localmente sem precisar digitar o token do SonarQube toda vez, crie um arquivo **`sonar_token.txt`** na raiz do seu projeto e cole o token dele.
+   * **IMPORTANTE**: Certifique-se de adicionar a linha `sonar_token.txt` no `.gitignore` do seu projeto para evitar vazamentos acidentais de credenciais.
 
 ---
 

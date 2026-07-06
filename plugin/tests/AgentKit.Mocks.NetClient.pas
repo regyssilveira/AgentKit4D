@@ -42,7 +42,7 @@ begin
   if FSimulateNetworkFailure then
     Exit(False);
 
-  if AFileName.EndsWith('AGENTS.md.template') then
+  if AFileName.EndsWith('.agents/AGENTS.md') then
     AContent := '# MOCK AGENTS TEMPLATE'
   else if AFileName.EndsWith('sonar-project.properties.template') then
     AContent := 'sonar.projectKey=MeuProjetoDelphi' + #13#10 +
@@ -50,7 +50,7 @@ begin
                 'sonar.projectVersion=1.0.0'
   else if AFileName.EndsWith('run_sonar.bat.template') then
     AContent := '@echo off' + #13#10 + 'echo MOCK RUN SONAR'
-  else if AFileName.EndsWith('generate_coverage.ps1.template') then
+  else if AFileName.EndsWith('scripts/generate_coverage.ps1') then
     AContent := '# MOCK GENERATE COVERAGE'
   else if AFileName.EndsWith('SKILL.md') then
     AContent := '---' + #13#10 + 'name: MockSkill' + #13#10 + 'description: Mock description' + #13#10 + '---' + #13#10 + '# Mock Skill Content'
