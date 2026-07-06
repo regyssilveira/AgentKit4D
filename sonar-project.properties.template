@@ -32,9 +32,11 @@ sonar.cpd.exclusions=src/GUI/**/*.pas,src/IDE/**/*.pas,tests/**/*.pas
 # sonar.coverageReportPaths=tests/CodeCoverage_Summary.xml
 
 # =====================================================================
-# SUPRESSÃO DE FALSOS POSITIVOS (MULTICRITÉRIO)
+# SUPRESSÃO DE FALSOS POSITIVOS E AJUSTES DE REGRAS (MULTICRITÉRIO)
 # =====================================================================
-sonar.issue.ignore.multicriteria=e1,e2,e3,e4,e5,e6,e7,e8,e9
+# Ative apenas supressões localizadas para manter o Quality Gate do SonarQube forte.
+# Regras de complexidade e código morto NÃO devem ser ignoradas globalmente.
+sonar.issue.ignore.multicriteria=e1,e2,e3
 
 # e1: Ignorar UnusedProperty em arquivos de domínio (RTTI/JSON serialization)
 sonar.issue.ignore.multicriteria.e1.ruleKey=community-delphi:UnusedProperty
@@ -48,26 +50,18 @@ sonar.issue.ignore.multicriteria.e2.resourceKey=src/Core/Ports/**/*.pas
 sonar.issue.ignore.multicriteria.e3.ruleKey=community-delphi:UnusedRoutine
 sonar.issue.ignore.multicriteria.e3.resourceKey=src/**/*.pas
 
-# e4: Ignorar UnusedImport falsos positivos em todo o projeto
-sonar.issue.ignore.multicriteria.e4.ruleKey=community-delphi:UnusedImport
-sonar.issue.ignore.multicriteria.e4.resourceKey=**/*
-
-# e5: Ignorar ImportSpecificity (falsos positivos em interfaces que precisam de imports)
-sonar.issue.ignore.multicriteria.e5.ruleKey=community-delphi:ImportSpecificity
-sonar.issue.ignore.multicriteria.e5.resourceKey=**/*
-
-# e6: Ignorar TooLongLine (estilo de tamanho de linha)
-sonar.issue.ignore.multicriteria.e6.ruleKey=community-delphi:TooLongLine
-sonar.issue.ignore.multicriteria.e6.resourceKey=**/*
-
-# e7: Ignorar UnusedLocalVariable falsos positivos (como variáveis declaradas inline)
-sonar.issue.ignore.multicriteria.e7.ruleKey=community-delphi:UnusedLocalVariable
-sonar.issue.ignore.multicriteria.e7.resourceKey=**/*
-
-# e8: Ignorar CognitiveComplexityRoutine (complexidade cognitiva de rotinas legadas/grandes)
-sonar.issue.ignore.multicriteria.e8.ruleKey=community-delphi:CognitiveComplexityRoutine
-sonar.issue.ignore.multicriteria.e8.resourceKey=**/*
-
-# e9: Ignorar CyclomaticComplexityRoutine (complexidade ciclomática de rotinas legadas/grandes)
-sonar.issue.ignore.multicriteria.e9.ruleKey=community-delphi:CyclomaticComplexityRoutine
-sonar.issue.ignore.multicriteria.e9.resourceKey=**/*
+# ---------------------------------------------------------------------
+# EXEMPLOS DE SUPRESSÃO DE REGRAS PARA CÓDIGO LEGADO (SE NECESSÁRIO)
+# ---------------------------------------------------------------------
+# Caso possua bases legadas muito complexas, descomente e ajuste os exemplos abaixo:
+#
+# Ignorar complexidade cognitiva/ciclomática estritamente em arquivos legados mapeados:
+# sonar.issue.ignore.multicriteria=legado1,legado2
+#
+# legado1: Complexidade Cognitiva em arquivos antigos
+# sonar.issue.ignore.multicriteria.legado1.ruleKey=community-delphi:CognitiveComplexityRoutine
+# sonar.issue.ignore.multicriteria.legado1.resourceKey=src/Legacy/**/*.pas
+#
+# legado2: Complexidade Ciclomática em arquivos antigos
+# sonar.issue.ignore.multicriteria.legado2.ruleKey=community-delphi:CyclomaticComplexityRoutine
+# sonar.issue.ignore.multicriteria.legado2.resourceKey=src/Legacy/**/*.pas
