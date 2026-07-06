@@ -1,0 +1,55 @@
+# Delphi/RAD Studio gitignore
+
+# Delphi Compiled binaries and resources
+*.dcu
+*.dcp
+*.bpl
+*.dcu~
+*.dcp~
+*.bpl~
+*.exe
+*.dll
+*.res
+# Exclude standard project resources that are auto-generated
+*.otares]
+*.dsv
+*.dproj
+
+# Delphi backup and history files
+*.~*
+__history/
+*.dpk~
+*.dproj~
+*.pas~
+*.dfm~
+*.rc~
+
+# IDE configurations and user state files (Desktop layout, caches)
+*.local
+*.identcache
+*.tvsconfig
+*.dsk
+*.projdata
+*.stat
+*.groupproj.local
+*.queries
+
+# Delphi Build directories
+plugin/dcu/
+plugin/bin/
+plugin/tests/dcu/
+plugin/tests/bin/
+plugin/tests/bootstrap_test_output/
+
+# Quality Kit dynamic credentials (local)
+sonar_token.txt
+
+# Test runner reports
+*.xml
+*.log
+*.log.bak
+
+# Temp / OS files
+Thumbs.db
+Desktop.ini
+.DS_Store

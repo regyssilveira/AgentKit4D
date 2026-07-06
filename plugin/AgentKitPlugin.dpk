@@ -1,0 +1,44 @@
+package AgentKitPlugin;
+
+{$R 'resources\AgentKit.Common.Resources.res' 'resources\AgentKit.Common.Resources.rc'}
+{$IFDEF IMPLICITBUILDING}
+{$IMPLEMENTATIONONLY OFF}
+{$ENDIF}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$DESIGNONLY}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  designide;
+
+contains
+  AgentKit.Common.Interfaces in 'src\AgentKit.Common.Interfaces.pas',
+  AgentKit.Net.Client in 'src\AgentKit.Net.Client.pas',
+  AgentKit.Service.Init in 'src\AgentKit.Service.Init.pas',
+  AgentKit.Plugin.Dialog in 'src\AgentKit.Plugin.Dialog.pas' {AgentKitDialog},
+  AgentKit.Plugin.Register in 'src\AgentKit.Plugin.Register.pas';
+
+end.

@@ -52,6 +52,30 @@ Se o seu servidor SonarQube não possuir acesso à internet:
 
 ---
 
+## 🔌 Integração Automática via Plugin de IDE (Recomendado)
+
+O **AgentKitPlugin** é um pacote design-time que se instala diretamente na IDE do RAD Studio (compatível com as versões **Delphi 11 Alexandria, Delphi 12 Athens e Delphi 13**). Ele automatiza completamente todos os passos manuais de configuração de qualidade em novos projetos.
+
+### O que o plugin faz?
+* **Interface Visual VCL**: Apresenta uma janela interativa para preenchimento rápido de metadados do projeto (sugerindo Project Key/Name automaticamente).
+* **Criação Automática no SonarQube**: Integra-se com a API do servidor SonarQube para criar o projeto diretamente na rede de forma integrada.
+* **Download Dinâmico com Fallback Offline**: Tenta baixar as versões mais estáveis dos templates diretamente deste repositório público no GitHub. Caso a conexão falhe, utiliza cópias internas dos templates embutidos nativamente no plugin.
+* **Log Integrado na IDE**: Exibe todo o progresso de download e escrita de arquivos diretamente no painel oficial de **"Messages"** (aba dedicada "AgentKit") da IDE.
+* **Não Bloqueante**: A comunicação de rede é executada assincronamente em segundo plano, evitando travamentos na IDE do Delphi.
+
+### Como Instalar o Plugin no Delphi:
+1. Abra o projeto de pacote **[AgentKitPlugin.dproj](file:///d:/Projetos/AgentKit4D/plugin/AgentKitPlugin.dproj)** no seu RAD Studio.
+2. Na janela do Project Manager da IDE, selecione o target platform **Win32** (plataforma padrão do executável da IDE `bds.exe`).
+3. Clique com o botão direito no projeto `AgentKitPlugin.bpl` e selecione **Build** (para compilar os fontes e embutir os recursos `.rc`).
+4. Clique com o botão direito novamente e selecione **Install**.
+5. Um aviso confirmará o registro do plugin na IDE.
+
+### Como Utilizar:
+* **Delphi 12 e 13**: Clique com o **botão direito** sobre o projeto ativo no **Project Manager** da IDE e escolha **"AgentKit: Initialize Quality Kit"**.
+* **Delphi 11**: Acesse a opção **"AgentKit: Initialize Quality Kit"** inserida sob o menu **Tools** (Ferramentas) superior da IDE.
+
+---
+
 ## 🛠️ Como Utilizar em um Novo Projeto
 
 Siga os passos abaixo para implantar a qualidade de código em seu novo projeto Delphi:

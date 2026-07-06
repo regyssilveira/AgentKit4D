@@ -1,0 +1,4 @@
+AGENTS_TEMPLATE RCDATA "..\..\AGENTS.md.template"
+SONAR_PROPERTIES_TEMPLATE RCDATA "..\..\sonar-project.properties.template"
+RUN_SONAR_TEMPLATE RCDATA "..\..\run_sonar.bat.template"
+COVERAGE_PS_TEMPLATE RCDATA "..\..\generate_coverage.ps1.template"
