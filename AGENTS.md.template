@@ -18,7 +18,7 @@ Este documento define o conjunto completo de diretrizes de engenharia de softwar
 ---
 
 ## 2. Qualidade de Código e Desenvolvimento Orientado a Testes (TDD)
-**Nenhuma linha de código, nova funcionalidade ou correção deve ser escrita sem que nasça a partir de um teste (TDD - Test Driven Development).** Isso é exigido tanto para novos desenvolvimentos quanto para correção de bugs:
+**Nenhuma linha de código, nova funcionalidade ou correção deve ser escrita sem que nasça a partir de um teste (TDD - Test Driven Development).** Isso é exigido tanto para novos desenvolvimentos quanto para correção de bugs. Em cenários legados onde o acoplamento impede a testabilidade imediata, siga a estratégia de desacoplamento incremental (ver Seção 6):
 
 ### A. Fluxo Geral de TDD (Novas Funcionalidades)
 1.  **Escrever o Caso de Teste (Fase Red)**: Antes de codificar qualquer lógica, escreva o teste unitário (ex: DUnitX) que represente o requisito. Execute a suíte e garanta que o novo teste falhe.
@@ -45,6 +45,11 @@ Todo bug encontrado ou reportado deve seguir obrigatoriamente a técnica de corr
           LMyObj.Free;
         end;
         ```
+*   **Interfaces (ARC - Auto Reference Counting)**:
+    *   Instâncias associadas a variáveis do tipo interface (`IMyInterface`) possuem contagem automática de referência e são liberadas pelo compilador. **Nunca** invoque `.Free` ou tente liberar manualmente variáveis do tipo interface.
+    *   Evite referências cíclicas entre objetos gerenciados por interfaces (use referências fracas ou remova a referência ao destruir o objeto base).
+*   **Preferência por Records (Value Objects e RAII)**:
+    *   Para estruturas de dados simples, DTOs (Data Transfer Objects) ou objetos de valor imutáveis, dê preferência ao uso de `record` em vez de `class`. Os `records` são alocados na *stack* e desalocados automaticamente, eliminando a necessidade de blocos `try..finally`.
 *   **Construtores e Destrutores (Herança e Ciclo de Vida)**:
     *   Todo construtor deve invocar `inherited;` (ou `inherited Create;`) na primeira linha ou onde for adequado (`ConstructorWithoutInherited`).
     *   Todo destrutor de classe personalizada deve obrigatoriamente sobrescrever `TObject.Destroy` usando `override;` e invocar `inherited;` (ou `inherited Destroy;`) como sua última instrução (`DestructorWithoutInherited` / `DestructorName`).
@@ -53,6 +58,7 @@ Todo bug encontrado ou reportado deve seguir obrigatoriamente a técnica de corr
     *   Classes iniciam com o prefixo **`T`** (ex: `TMyService`).
     *   Argumentos/parâmetros de entrada em métodos iniciam com o prefixo **`A`** (ex: `const AInstallSingle: string`).
     *   Variáveis locais iniciam com o prefixo **`L`** (ex: `var LPkgPath: string`).
+
 
 ---
 
@@ -93,3 +99,43 @@ Ao escrever ou modificar código Delphi neste repositório, você deve seguir es
 *   **Configuração de Supressões no `sonar-project.properties`**:
     *   Falsos positivos frequentes de `ImportSpecificity`, `UnusedLocalVariable` e `UnusedRoutine` sob Conditional Compilations, bem como métricas de estilo puras como `TooLongLine`, `CognitiveComplexityRoutine` e `CyclomaticComplexityRoutine` devem ser silenciadas via `sonar.issue.ignore.multicriteria` no `sonar-project.properties`.
     *   Boilerplate de telas (GUI) e stubs de wizards devem ser excluídos da verificação de duplicidade de código via `sonar.cpd.exclusions` para manter a densidade do CPD abaixo do limite do Quality Gate (3.0%).
+
+---
+
+## 6. Diretrizes para Código Legado e Refatoração Incremental
+Ao trabalhar em sistemas legados ou em fase de modernização, siga os seguintes princípios arquiteturais para mitigar riscos de regressão e eliminar dívidas técnicas:
+
+### A. Desacoplamento de UI (Padrão Humble Object)
+*   **Segregação Estrita**: É proibido codificar regras de negócio, cálculos fiscais ou queries de banco de dados diretamente em Units de componentes visuais (`TForm`, `TFrame`, `TDataModule`).
+*   **Abstração**: A tela deve atuar apenas como uma casca de apresentação ("Humble Object"). Todo evento de clique ou interação deve delegar a lógica imediatamente para classes de serviço puro (`TMyService`), controllers ou presenters que não dependam da interface gráfica.
+
+### B. TDD Incremental e Testabilidade em Acoplamentos
+*   **Interface de Abstração**: Se uma classe legada não pode ser testada de forma isolada (ex: acoplamento rígido a um banco de dados global ou API externa), crie uma interface (`IServiceGateway`, `IRepository`) para isolar a dependência e injetar um mock no teste de unidade.
+*   **Testes de Caracterização**: Antes de alterar uma rotina legada complexa e sem cobertura, escreva um teste de unidade para caracterizar seu comportamento atual (registrando as entradas e saídas reais observadas). Isso blinda o sistema contra alterações acidentais de comportamento (regressões) durante a refatoração.
+
+### C. Conformidade de Migração Unicode
+*   **Segurança em String/Char**: Em migrações para Delphi Unicode (XE+), nunca assuma que o comprimento em caracteres (`Length`) é equivalente ao tamanho do buffer em bytes.
+*   **Buffers e Encodings**: Use o tipo `PByte` ou `RawByteString` exclusivamente para o tráfego de dados binários brutos. Para conversões e leituras de arquivos/streams, explicite o encoding usando a classe `TEncoding` (ex: `TEncoding.UTF8`, `TEncoding.ANSI`). Evite casts implícitos de string que causem perda irreversível de caracteres.
+
+### D. Eliminação de Estado Global e Singletons Abusivos
+*   **Injeção de Dependência**: Proiba a criação de novas variáveis globais em seções `var` de interface. Em vez disso, passe as dependências necessárias de forma explícita através de parâmetros no construtor da classe (`Constructor Injection`).
+*   **Instanciação Controlada**: Evite que as classes dependam diretamente de instâncias estáticas globais (ex: `DataModuleConexao.FDConnection`). Crie instâncias isoladas ou passe a conexão como parâmetro, assegurando que múltiplos testes unitários possam ser executados concorrentemente em threads separadas sem colisão de estado.
+
+---
+
+## 7. Diretrizes para Desenvolvimento Guiado por IA (AI-Driven Development) & SDD
+Ao atuar como assistente de IA neste repositório, você deve seguir este contrato de interação e engenharia baseado em especificações:
+
+### A. Design Baseado em Contratos (Contract-First)
+*   **Assinaturas Prévias**: Antes de escrever a lógica de execução de um método complexo, declare e valide os tipos de dados de entrada, retornos e as interfaces envolvidas. Garanta que a arquitetura do fluxo esteja sólida antes de preencher os corpos dos métodos.
+*   **Validação de Parâmetros (Fail-Fast)**: Toda rotina pública exposta deve iniciar validando ativamente seus parâmetros de entrada (ex: testar se objetos obrigatórios estão `Assigned`, ou se strings necessárias não estão vazias) e lançar exceções descritivas imediatamente caso as pré-condições falhem.
+
+### B. Escrita de Código sem Atalhos ou Placeholders
+*   **Código Completo**: Não sugira códigos parciais ou incompletos utilizando comentários vazios como `// lógica de processamento aqui...`. Se for sugerir uma alteração ou criação de rotina, escreva-a integralmente para evitar erros de compilação ou indefinições.
+*   **Refatorações Claras**: Ao propor modificações em código existente, apresente as alterações de forma explícita ou forneça blocos de diff completos e inequívocos.
+
+### C. Comentários Limpos e Intencionais
+*   **Foco no "Porquê"**: Não insira comentários óbvios que simplesmente traduzam a sintaxe do Delphi (ex: evite `// Loop de 1 a 10` ou `// Construtor`).
+*   **Documentação Arquitetural**: Use comentários de forma cirúrgica apenas para esclarecer decisões de design não-óbvias, contornos de bugs de terceiros (workarounds), limites de performance ou regras de negócio fiscais/organizacionais complexas.
+
+
