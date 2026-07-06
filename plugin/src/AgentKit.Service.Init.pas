@@ -40,6 +40,13 @@ implementation
 uses
   Winapi.Windows, System.IOUtils;
 
+type
+  TSkillDefinition = record
+    SkillName: string;
+    ResourceName: string;
+    GitHubPath: string;
+  end;
+
 { TAgentKitInitService }
 
 constructor TAgentKitInitService.Create(const ANetClient: IAgentKitNetClient;
@@ -156,9 +163,32 @@ begin
 end;
 
 function TAgentKitInitService.InitializeProject(const AConfig: TProjectInitConfig; out AWarnings: string): Boolean;
+var
+  LWarningBuilder: TStringBuilder;
+  LAgentsDir: string;
+  LAgentsContent: string;
+  LLocalWarnings: string;
+  LAgentsFile: string;
+  LSkillsDir: string;
+  LSkills: array[0..10] of TSkillDefinition;
+  LSkill: TSkillDefinition;
+  LTargetDir: string;
+  LSkillContent: string;
+  LSkillWarnings: string;
+  LSkillFile: string;
+  LCreateError: string;
+  LPropertiesContent: string;
+  LProcessedProperties: string;
+  LPropertiesFile: string;
+  LRunSonarContent: string;
+  LRunSonarFile: string;
+  LScriptsDir: string;
+  LCoverageContent: string;
+  LCoverageFile: string;
+  LTokenFile: string;
 begin
   AWarnings := '';
-  var LWarningBuilder := TStringBuilder.Create;
+  LWarningBuilder := TStringBuilder.Create;
   try
     try
       Log('Inicializando projeto em: ' + AConfig.ProjectPath);
@@ -169,31 +199,107 @@ begin
           raise Exception.Create('Nao foi possivel criar o diretorio do projeto.');
       end;
       
-      var LAgentsDir := IncludeTrailingPathDelimiter(AConfig.ProjectPath) + '.agents';
+      LAgentsDir := IncludeTrailingPathDelimiter(AConfig.ProjectPath) + '.agents';
       if not FFileSystem.DirectoryExists(LAgentsDir) then
       begin
         if not FFileSystem.CreateDir(LAgentsDir) then
           raise Exception.Create('Nao foi possivel criar a pasta .agents.');
       end;
       
-      var LAgentsContent := '';
-      var LLocalWarnings := '';
+      LAgentsContent := '';
+      LLocalWarnings := '';
       if not LoadTemplateContent('AGENTS.md.template', 'AGENTS_TEMPLATE', LAgentsContent, LLocalWarnings) then
         raise Exception.Create('Falha ao carregar o template AGENTS.md.');
         
       if not LLocalWarnings.IsEmpty then
         LWarningBuilder.Append(LLocalWarnings);
         
-      var LAgentsFile := IncludeTrailingPathDelimiter(LAgentsDir) + 'AGENTS.md';
+      LAgentsFile := IncludeTrailingPathDelimiter(LAgentsDir) + 'AGENTS.md';
       FFileSystem.WriteAllText(LAgentsFile, LAgentsContent);
       Log('Arquivo AGENTS.md criado.');
+
+      // Criar a pasta .agents/skills
+      LSkillsDir := IncludeTrailingPathDelimiter(LAgentsDir) + 'skills';
+      if not FFileSystem.DirectoryExists(LSkillsDir) then
+      begin
+        if not FFileSystem.CreateDir(LSkillsDir) then
+          raise Exception.Create('Nao foi possivel criar a pasta .agents/skills.');
+      end;
+
+      // Definir as skills
+      LSkills[0].SkillName := 'delphi-clean-code-solid';
+      LSkills[0].ResourceName := 'SKILL_CC_SOLID';
+      LSkills[0].GitHubPath := 'templates/skills/delphi-clean-code-solid/SKILL.md';
+
+      LSkills[1].SkillName := 'delphi-memory-management';
+      LSkills[1].ResourceName := 'SKILL_MEMORY';
+      LSkills[1].GitHubPath := 'templates/skills/delphi-memory-management/SKILL.md';
+
+      LSkills[2].SkillName := 'delphi-tdd-and-quality';
+      LSkills[2].ResourceName := 'SKILL_TDD_QUALITY';
+      LSkills[2].GitHubPath := 'templates/skills/delphi-tdd-and-quality/SKILL.md';
+
+      LSkills[3].SkillName := 'delphi-sonar-lint-compliance';
+      LSkills[3].ResourceName := 'SKILL_SONAR_LINT';
+      LSkills[3].GitHubPath := 'templates/skills/delphi-sonar-lint-compliance/SKILL.md';
+
+      LSkills[4].SkillName := 'delphi-legacy-refactoring';
+      LSkills[4].ResourceName := 'SKILL_LEGACY_REF';
+      LSkills[4].GitHubPath := 'templates/skills/delphi-legacy-refactoring/SKILL.md';
+
+      LSkills[5].SkillName := 'delphi-ai-contract-design';
+      LSkills[5].ResourceName := 'SKILL_AI_CONTRACT';
+      LSkills[5].GitHubPath := 'templates/skills/delphi-ai-contract-design/SKILL.md';
+
+      LSkills[6].SkillName := 'delphi-multitarget-compilation';
+      LSkills[6].ResourceName := 'SKILL_COMPILATION';
+      LSkills[6].GitHubPath := 'templates/skills/delphi-multitarget-compilation/SKILL.md';
+
+      LSkills[7].SkillName := 'delphi-multithreading-async';
+      LSkills[7].ResourceName := 'SKILL_THREADING';
+      LSkills[7].GitHubPath := 'templates/skills/delphi-multithreading-async/SKILL.md';
+
+      LSkills[8].SkillName := 'delphi-firedac-optimization';
+      LSkills[8].ResourceName := 'SKILL_FIREDAC';
+      LSkills[8].GitHubPath := 'templates/skills/delphi-firedac-optimization/SKILL.md';
+
+      LSkills[9].SkillName := 'delphi-acbr-integration';
+      LSkills[9].ResourceName := 'SKILL_ACBR';
+      LSkills[9].GitHubPath := 'templates/skills/delphi-acbr-integration/SKILL.md';
+
+      LSkills[10].SkillName := 'delphi-rest-apis-horse';
+      LSkills[10].ResourceName := 'SKILL_HORSE';
+      LSkills[10].GitHubPath := 'templates/skills/delphi-rest-apis-horse/SKILL.md';
+
+      // Inicializar cada skill
+      for LSkill in LSkills do
+      begin
+        LTargetDir := IncludeTrailingPathDelimiter(LSkillsDir) + LSkill.SkillName;
+        if not FFileSystem.DirectoryExists(LTargetDir) then
+        begin
+          if not FFileSystem.CreateDir(LTargetDir) then
+            raise Exception.Create('Nao foi possivel criar o diretorio da skill: ' + LSkill.SkillName);
+        end;
+
+        LSkillContent := '';
+        LSkillWarnings := '';
+        if not LoadTemplateContent(LSkill.GitHubPath, LSkill.ResourceName, LSkillContent, LSkillWarnings) then
+          raise Exception.Create('Falha ao carregar o template da skill: ' + LSkill.SkillName);
+
+        if not LSkillWarnings.IsEmpty then
+          LWarningBuilder.Append(LSkillWarnings);
+
+        LSkillFile := IncludeTrailingPathDelimiter(LTargetDir) + 'SKILL.md';
+        FFileSystem.WriteAllText(LSkillFile, LSkillContent);
+        Log('Skill ' + LSkill.SkillName + ' inicializada.');
+      end;
       
       if AConfig.ConfigureSonar then
       begin
         if AConfig.CreateProjectOnServer and (not AConfig.SonarServerUrl.IsEmpty) and (not AConfig.SonarToken.IsEmpty) then
         begin
           Log('Tentando criar projeto no servidor SonarQube: ' + AConfig.SonarServerUrl);
-          var LCreateError := '';
+          LCreateError := '';
           if not FNetClient.CreateSonarProject(AConfig.SonarServerUrl, AConfig.SonarToken, AConfig.ProjectKey, AConfig.ProjectName, LCreateError) then
           begin
             if LCreateError.Contains('already exists') then
@@ -212,47 +318,47 @@ begin
           end;
         end;
         
-        var LPropertiesContent := '';
+        LPropertiesContent := '';
         if not LoadTemplateContent('sonar-project.properties.template', 'SONAR_PROPERTIES_TEMPLATE', LPropertiesContent, LLocalWarnings) then
           raise Exception.Create('Falha ao carregar o template sonar-project.properties.');
           
         if not LLocalWarnings.IsEmpty and (LWarningBuilder.ToString.IndexOf(LLocalWarnings) = -1) then
           LWarningBuilder.Append(LLocalWarnings);
           
-        var LProcessedProperties := ProcessSonarProperties(LPropertiesContent, AConfig);
-        var LPropertiesFile := IncludeTrailingPathDelimiter(AConfig.ProjectPath) + 'sonar-project.properties';
+        LProcessedProperties := ProcessSonarProperties(LPropertiesContent, AConfig);
+        LPropertiesFile := IncludeTrailingPathDelimiter(AConfig.ProjectPath) + 'sonar-project.properties';
         FFileSystem.WriteAllText(LPropertiesFile, LProcessedProperties);
         Log('Arquivo sonar-project.properties criado.');
         
-        var LRunSonarContent := '';
+        LRunSonarContent := '';
         if not LoadTemplateContent('run_sonar.bat.template', 'RUN_SONAR_TEMPLATE', LRunSonarContent, LLocalWarnings) then
           raise Exception.Create('Falha ao carregar o template run_sonar.bat.');
           
         if not LLocalWarnings.IsEmpty and (LWarningBuilder.ToString.IndexOf(LLocalWarnings) = -1) then
           LWarningBuilder.Append(LLocalWarnings);
           
-        var LRunSonarFile := IncludeTrailingPathDelimiter(AConfig.ProjectPath) + 'run_sonar.bat';
+        LRunSonarFile := IncludeTrailingPathDelimiter(AConfig.ProjectPath) + 'run_sonar.bat';
         FFileSystem.WriteAllText(LRunSonarFile, LRunSonarContent);
         Log('Arquivo run_sonar.bat criado.');
         
-        var LScriptsDir := IncludeTrailingPathDelimiter(AConfig.ProjectPath) + 'scripts';
+        LScriptsDir := IncludeTrailingPathDelimiter(AConfig.ProjectPath) + 'scripts';
         if not FFileSystem.DirectoryExists(LScriptsDir) then
           FFileSystem.CreateDir(LScriptsDir);
           
-        var LCoverageContent := '';
+        LCoverageContent := '';
         if not LoadTemplateContent('generate_coverage.ps1.template', 'COVERAGE_PS_TEMPLATE', LCoverageContent, LLocalWarnings) then
           raise Exception.Create('Falha ao carregar o template generate_coverage.ps1.');
           
         if not LLocalWarnings.IsEmpty and (LWarningBuilder.ToString.IndexOf(LLocalWarnings) = -1) then
           LWarningBuilder.Append(LLocalWarnings);
           
-        var LCoverageFile := IncludeTrailingPathDelimiter(LScriptsDir) + 'generate_coverage.ps1';
+        LCoverageFile := IncludeTrailingPathDelimiter(LScriptsDir) + 'generate_coverage.ps1';
         FFileSystem.WriteAllText(LCoverageFile, LCoverageContent);
         Log('Arquivo generate_coverage.ps1 criado.');
         
         if not AConfig.SonarToken.IsEmpty then
         begin
-          var LTokenFile := IncludeTrailingPathDelimiter(AConfig.ProjectPath) + 'sonar_token.txt';
+          LTokenFile := IncludeTrailingPathDelimiter(AConfig.ProjectPath) + 'sonar_token.txt';
           FFileSystem.WriteAllText(LTokenFile, AConfig.SonarToken);
           Log('Arquivo sonar_token.txt criado localmente.');
         end;

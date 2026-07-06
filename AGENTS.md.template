@@ -1,141 +1,40 @@
-# Diretrizes de Desenvolvimento e Qualidade Delphi (Guia Definitivo)
+# Diretrizes de Qualidade e Desenvolvimento Delphi (AgentKit4D)
 
-Este documento define o conjunto completo de diretrizes de engenharia de software, boas práticas de Clean Code, gestão de memória e conformidade com análises estáticas (DelphiSonar/DelphiLint) a ser seguido estritamente em novos projetos.
+Este projeto utiliza diretrizes modulares para guiar assistentes de IA (coding assistants). As instruções e regras detalhadas estão divididas por área de especialidade dentro da pasta `.agents/skills/`.
 
----
+Ao interagir com este repositório, ative e respeite as seguintes regras de desenvolvimento disponíveis:
 
-## 1. Princípios de Engenharia de Software e Clean Code
-*   **SOLID**:
-    *   **S (Single Responsibility)**: Interfaces e classes com responsabilidade única.
-    *   **O (Open/Closed)**: Facilidade de extensão sem alteração direta de código existente (use herança ou composição).
-    *   **L (Liskov Substitution)**: Classes derivadas devem poder substituir suas classes base sem quebrar o comportamento.
-    *   **I (Interface Segregation)**: Prefira múltiplas interfaces específicas a uma única interface genérica.
-    *   **D (Dependency Inversion)**: Uso de injeção de dependência via construtores para facilitar testes e reduzir acoplamento.
-*   **Clean Code**: Nomes expressivos de variáveis, funções e métodos. Funções pequenas e focadas em uma única tarefa.
-*   **DRY (Don't Repeat Yourself)**: Evitar duplicação lógica através da criação de helpers, extension methods ou serviços utilitários bem isolados.
-*   **KISS (Keep It Simple, Stupid)**: Priorizar a simplicidade lógica. Evitar superengenharia.
+## Skills de Qualidade e Engenharia de Software
 
----
+1. **[Princípios SOLID e Clean Code](file:///./skills/delphi-clean-code-solid/SKILL.md)**
+   * Diretrizes gerais de design, padrões de nomenclatura (T, I, A, L) e boas práticas de responsabilidade única.
 
-## 2. Qualidade de Código e Desenvolvimento Orientado a Testes (TDD)
-**Nenhuma linha de código, nova funcionalidade ou correção deve ser escrita sem que nasça a partir de um teste (TDD - Test Driven Development).** Isso é exigido tanto para novos desenvolvimentos quanto para correção de bugs. Em cenários legados onde o acoplamento impede a testabilidade imediata, siga a estratégia de desacoplamento incremental (ver Seção 6):
+2. **[Gestão de Memória](file:///./skills/delphi-memory-management/SKILL.md)**
+   * Prevenção de vazamentos de memória (memory leaks), try..finally, records e gerenciamento de interfaces (ARC).
 
-### A. Fluxo Geral de TDD (Novas Funcionalidades)
-1.  **Escrever o Caso de Teste (Fase Red)**: Antes de codificar qualquer lógica, escreva o teste unitário (ex: DUnitX) que represente o requisito. Execute a suíte e garanta que o novo teste falhe.
-2.  **Codificar a Solução (Fase Green)**: Implemente a lógica de produção estritamente necessária para fazer com que o novo teste passe com sucesso.
-3.  **Refatorar o Código (Fase Refactor)**: Refatore o código implementado seguindo os princípios de Clean Code, DRY e KISS, garantindo que toda a suíte de testes continue passando (100% de sucesso).
+3. **[TDD e Qualidade de Código](file:///./skills/delphi-tdd-and-quality/SKILL.md)**
+   * Ciclo de TDD, correção orientada a testes para bugs (testes de regressão) e peculiaridades do DUnitX.
 
-### B. Correção Orientada a Testes (TDD para Bugs)
-Todo bug encontrado ou reportado deve seguir obrigatoriamente a técnica de correção orientada a testes de regressão:
-1.  **Identificar e Mapear o Bug**: Entender e documentar o cenário e os dados onde o bug ocorre.
-2.  **Escrever o Teste de Regressão**: Criar um caso de teste na suíte de testes correspondente (DUnitX) que reproduza fielmente o cenário do bug. O teste deve falhar.
-3.  **Corrigir o Bug**: Somente após o teste ter sido registrado e validado como falho, implementar a correção lógica no código de produção.
-4.  **Validar a Correção**: Garantir que o teste criado (e toda a suíte de testes existente) agora passa com sucesso absoluto, blindando o sistema contra regressões.
+4. **[Compilação Multiplataforma](file:///./skills/delphi-multitarget-compilation/SKILL.md)**
+   * Compilação Win32/Win64, geração estável de cobertura e scripts de automação (`call`).
 
----
+5. **[Conformidade SonarQube e DelphiLint](file:///./skills/delphi-sonar-lint-compliance/SKILL.md)**
+   * Correções de code smells, tratamento de falsos positivos do parser e regras de confiabilidade.
 
-## 3. Gestão de Memória e Boas Práticas Delphi
-*   **Garantia contra Memory Leaks**:
-    *   Sempre envolva a criação de objetos locais em blocos `try..finally` para assegurar sua liberação:
-        ```pascal
-        LMyObj := TMyClass.Create;
-        try
-          // operações com o objeto
-        finally
-          LMyObj.Free;
-        end;
-        ```
-*   **Interfaces (ARC - Auto Reference Counting)**:
-    *   Instâncias associadas a variáveis do tipo interface (`IMyInterface`) possuem contagem automática de referência e são liberadas pelo compilador. **Nunca** invoque `.Free` ou tente liberar manualmente variáveis do tipo interface.
-    *   Evite referências cíclicas entre objetos gerenciados por interfaces (use referências fracas ou remova a referência ao destruir o objeto base).
-*   **Preferência por Records (Value Objects e RAII)**:
-    *   Para estruturas de dados simples, DTOs (Data Transfer Objects) ou objetos de valor imutáveis, dê preferência ao uso de `record` em vez de `class`. Os `records` são alocados na *stack* e desalocados automaticamente, eliminando a necessidade de blocos `try..finally`.
-*   **Construtores e Destrutores (Herança e Ciclo de Vida)**:
-    *   Todo construtor deve invocar `inherited;` (ou `inherited Create;`) na primeira linha ou onde for adequado (`ConstructorWithoutInherited`).
-    *   Todo destrutor de classe personalizada deve obrigatoriamente sobrescrever `TObject.Destroy` usando `override;` e invocar `inherited;` (ou `inherited Destroy;`) como sua última instrução (`DestructorWithoutInherited` / `DestructorName`).
-*   **Nomenclatura Padronizada**:
-    *   Interfaces iniciam com o prefixo **`I`** (ex: `IBoss4DLogger`).
-    *   Classes iniciam com o prefixo **`T`** (ex: `TMyService`).
-    *   Argumentos/parâmetros de entrada em métodos iniciam com o prefixo **`A`** (ex: `const AInstallSingle: string`).
-    *   Variáveis locais iniciam com o prefixo **`L`** (ex: `var LPkgPath: string`).
+6. **[Desacoplamento e Código Legado](file:///./skills/delphi-legacy-refactoring/SKILL.md)**
+   * Refatoração incremental, padrão Humble Object, migração Unicode e eliminação de estado global.
 
+7. **[Desenvolvimento Guiado por IA](file:///./skills/delphi-ai-contract-design/SKILL.md)**
+   * Contrato de IA, design por contratos (Contract-First), código sem placeholders e comentários claros.
 
----
+8. **[Multithreading e Assincronismo](file:///./skills/delphi-multithreading-async/SKILL.md)**
+   * Programação paralela com PPL (`TTask`/`TFuture`), thread-safety, proteção de recursos e isolamento de conexões de dados.
 
-## 4. Compilação e Builds Multiplataforma (Win32 e Win64)
-*   **Compatibilidade Multiplataforma**: Sempre valide o build e execute a suíte de testes em ambas as plataformas Win32 e Win64 usando `dcc32` e `dcc64`.
-*   **Cobertura de Código Estável**: Dê preferência à execução e geração de cobertura de código no ambiente x64 (Win64), pois sistemas operacionais modernos possuem restrições na camada WoW64 para hooks de depuração de processos 32-bit (o que pode retornar 0% de cobertura no x86).
-*   **Inferência de Genéricos no DUnitX (Assert.AreEqual)**: Para garantir portabilidade de testes no compilador de 64 bits, explicite o tipo genérico na chamada das assertivas do DUnitX (ex: `Assert.AreEqual<string>`, `Assert.AreEqual<Integer>`), pois a inferência automática pode falhar em assinaturas genéricas com sobrecargas de tipos no compilador Delphi x64.
-*   **Invocação em Lotes (Scripts Batch/CMD)**: Ao escrever scripts `.bat` ou `.cmd` para o Windows que executem o compilador Delphi (`dcc32` / `dcc64`), sempre preceda as invocações com o comando `call` (ex: `call dcc32 ...`). Caso contrário, o interpretador de lote do Windows encerrará a execução imediatamente após a primeira compilação, impedindo comandos e tarefas subsequentes.
+9. **[Acesso a Dados com FireDAC](file:///./skills/delphi-firedac-optimization/SKILL.md)**
+   * Configuração otimizada de conexões, pool, paginação de queries, transações e desacoplamento com `TFDMemTable`.
 
----
+10. **[Integração Fiscal com ACBr](file:///./skills/delphi-acbr-integration/SKILL.md)**
+    * Isolamento de lógica fiscal via wrappers, desacoplamento de eventos de UI e suporte multiplataforma (WinCrypt/OpenSSL).
 
-## 5. Conformidade Estrita com DelphiSonar / DelphiLint
-Ao escrever ou modificar código Delphi neste repositório, você deve seguir estritamente as regras de análise estática do DelphiSonar para garantir Confiabilidade e Manutenibilidade máximas:
-
-### Regras de Confiabilidade (Prevenção de Bugs)
-*   **Retorno de Métodos (Functions)**: Toda função deve obrigatoriamente ter um valor atribuído a `Result` (`RoutineResultAssigned`).
-*   **Inicialização Preventiva**: Variáveis locais devem ser declaradas e inicializadas antes do uso para prevenir valores indefinidos em memória (`VariableInitialization`).
-*   **Uso de FreeAndNil**: `FreeAndNil` deve ser utilizado exclusivamente com instâncias descendentes de `TObject` (`FreeAndNilTObject`).
-*   **Ordenação do TStringList**: Ao utilizar a propriedade `Duplicates` de um `TStringList`, certifique-se de que o objeto está ordenado (`Sorted := True`) para evitar comportamento indefinido (`StringListDuplicates`).
-
-### Regras de Manutenibilidade e Estilo (Code Smells)
-*   **Validação de Ponteiros/Objetos**: Sempre utilize a função nativa `System.Assigned(LObj)` ou `not System.Assigned(LObj)` para checagem de ponteiros em vez de comparar diretamente com `nil` (`NilComparison`).
-*   **Liberação Limpa**: Não utilize checagens redundantes de atribuição antes de liberar objetos. Use simplesmente `LObj.Free;` em vez de `if Assigned(LObj) then LObj.Free;` (`AssignedAndFree`).
-*   **Espaços em Branco**: Nenhum arquivo ou linha de código deve conter espaços em branco no final (Trailing Whitespace) (`TrailingWhitespace`).
-*   **Seções de Visibilidade**:
-    *   As diretivas de visibilidade em classes devem seguir a ordem ascendente de acessibilidade: `private`, `protected`, `public`, `published` (`VisibilitySectionOrder`).
-    *   Seções de visibilidade que estejam vazias ou redundantes devem ser removidas (`EmptyVisibilitySection`).
-    *   Seções de visibilidade consecutivas de mesmo nível devem ser combinadas (`ConsecutiveVisibilitySection`).
-*   **Consistência de Nomenclatura**: Mantenha a capitalização de nomes (variáveis, classes, propriedades) estritamente consistente com a declaração original (`MixedNames`). Ex: use `MainFormOnTaskBar` e não `MainFormOnTaskbar`.
-*   **Construção com 'with'**: Nunca utilize a instrução `with` para acessar membros de objetos, pois isso prejudica a legibilidade e induz a erros silenciosos de escopo (`WithStatement`).
-
-### Gerenciamento de Falsos Positivos e Métricas
-*   **Imports de Interface vs. Implementation (`ImportSpecificity`)**:
-    *   Regra geral: Mova as units importadas na cláusula `uses` da interface para a cláusula `uses` da implementação sempre que possível.
-    *   *Exceção (Falso Positivo)*: Se a unit for necessária para declarar tipos de campos privados, propriedades ou parâmetros da interface, o import deve permanecer na seção `interface`.
-*   **Variáveis Inline (`UnusedLocalVariable` / `UnusedImport`)**:
-    *   O parser do Sonar para Delphi possui limitações ao rastrear variáveis declaradas de forma inline (`var LVar := ...`) introduzidas no Delphi Rio, frequentemente acusando falsos positivos. Em caso de alertas incorretos de variáveis não utilizadas na linha seguinte, mova a declaração para a seção `var` tradicional da rotina.
-*   **Configuração de Supressões no `sonar-project.properties`**:
-    *   Falsos positivos frequentes de `ImportSpecificity`, `UnusedLocalVariable` e `UnusedRoutine` sob Conditional Compilations, bem como métricas de estilo puras como `TooLongLine`, `CognitiveComplexityRoutine` e `CyclomaticComplexityRoutine` devem ser silenciadas via `sonar.issue.ignore.multicriteria` no `sonar-project.properties`.
-    *   Boilerplate de telas (GUI) e stubs de wizards devem ser excluídos da verificação de duplicidade de código via `sonar.cpd.exclusions` para manter a densidade do CPD abaixo do limite do Quality Gate (3.0%).
-
----
-
-## 6. Diretrizes para Código Legado e Refatoração Incremental
-Ao trabalhar em sistemas legados ou em fase de modernização, siga os seguintes princípios arquiteturais para mitigar riscos de regressão e eliminar dívidas técnicas:
-
-### A. Desacoplamento de UI (Padrão Humble Object)
-*   **Segregação Estrita**: É proibido codificar regras de negócio, cálculos fiscais ou queries de banco de dados diretamente em Units de componentes visuais (`TForm`, `TFrame`, `TDataModule`).
-*   **Abstração**: A tela deve atuar apenas como uma casca de apresentação ("Humble Object"). Todo evento de clique ou interação deve delegar a lógica imediatamente para classes de serviço puro (`TMyService`), controllers ou presenters que não dependam da interface gráfica.
-
-### B. TDD Incremental e Testabilidade em Acoplamentos
-*   **Interface de Abstração**: Se uma classe legada não pode ser testada de forma isolada (ex: acoplamento rígido a um banco de dados global ou API externa), crie uma interface (`IServiceGateway`, `IRepository`) para isolar a dependência e injetar um mock no teste de unidade.
-*   **Testes de Caracterização**: Antes de alterar uma rotina legada complexa e sem cobertura, escreva um teste de unidade para caracterizar seu comportamento atual (registrando as entradas e saídas reais observadas). Isso blinda o sistema contra alterações acidentais de comportamento (regressões) durante a refatoração.
-
-### C. Conformidade de Migração Unicode
-*   **Segurança em String/Char**: Em migrações para Delphi Unicode (XE+), nunca assuma que o comprimento em caracteres (`Length`) é equivalente ao tamanho do buffer em bytes.
-*   **Buffers e Encodings**: Use o tipo `PByte` ou `RawByteString` exclusivamente para o tráfego de dados binários brutos. Para conversões e leituras de arquivos/streams, explicite o encoding usando a classe `TEncoding` (ex: `TEncoding.UTF8`, `TEncoding.ANSI`). Evite casts implícitos de string que causem perda irreversível de caracteres.
-
-### D. Eliminação de Estado Global e Singletons Abusivos
-*   **Injeção de Dependência**: Proiba a criação de novas variáveis globais em seções `var` de interface. Em vez disso, passe as dependências necessárias de forma explícita através de parâmetros no construtor da classe (`Constructor Injection`).
-*   **Instanciação Controlada**: Evite que as classes dependam diretamente de instâncias estáticas globais (ex: `DataModuleConexao.FDConnection`). Crie instâncias isoladas ou passe a conexão como parâmetro, assegurando que múltiplos testes unitários possam ser executados concorrentemente em threads separadas sem colisão de estado.
-
----
-
-## 7. Diretrizes para Desenvolvimento Guiado por IA (AI-Driven Development) & SDD
-Ao atuar como assistente de IA neste repositório, você deve seguir este contrato de interação e engenharia baseado em especificações:
-
-### A. Design Baseado em Contratos (Contract-First)
-*   **Assinaturas Prévias**: Antes de escrever a lógica de execução de um método complexo, declare e valide os tipos de dados de entrada, retornos e as interfaces envolvidas. Garanta que a arquitetura do fluxo esteja sólida antes de preencher os corpos dos métodos.
-*   **Validação de Parâmetros (Fail-Fast)**: Toda rotina pública exposta deve iniciar validando ativamente seus parâmetros de entrada (ex: testar se objetos obrigatórios estão `Assigned`, ou se strings necessárias não estão vazias) e lançar exceções descritivas imediatamente caso as pré-condições falhem.
-
-### B. Escrita de Código sem Atalhos ou Placeholders
-*   **Código Completo**: Não sugira códigos parciais ou incompletos utilizando comentários vazios como `// lógica de processamento aqui...`. Se for sugerir uma alteração ou criação de rotina, escreva-a integralmente para evitar erros de compilação ou indefinições.
-*   **Refatorações Claras**: Ao propor modificações em código existente, apresente as alterações de forma explícita ou forneça blocos de diff completos e inequívocos.
-
-### C. Comentários Limpos e Intencionais
-*   **Foco no "Porquê"**: Não insira comentários óbvios que simplesmente traduzam a sintaxe do Delphi (ex: evite `// Loop de 1 a 10` ou `// Construtor`).
-*   **Documentação Arquitetural**: Use comentários de forma cirúrgica apenas para esclarecer decisões de design não-óbvias, contornos de bugs de terceiros (workarounds), limites de performance ou regras de negócio fiscais/organizacionais complexas.
-
-
+11. **[APIs REST com Horse](file:///./skills/delphi-rest-apis-horse/SKILL.md)**
+    * Padrões de controllers e rotas REST, uso de middlewares essenciais (`Jhonson`, `CORS`, `HandleException`) e organização MVC.

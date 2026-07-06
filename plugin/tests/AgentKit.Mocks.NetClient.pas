@@ -52,6 +52,8 @@ begin
     AContent := '@echo off' + #13#10 + 'echo MOCK RUN SONAR'
   else if AFileName.EndsWith('generate_coverage.ps1.template') then
     AContent := '# MOCK GENERATE COVERAGE'
+  else if AFileName.EndsWith('SKILL.md') then
+    AContent := '---' + #13#10 + 'name: MockSkill' + #13#10 + 'description: Mock description' + #13#10 + '---' + #13#10 + '# Mock Skill Content'
   else
     Exit(False);
 
